@@ -9,14 +9,20 @@ Freelancer'lar ve küçük e-ticaret siteleri için müşteri yorumlarını (tes
 - **Yönetim Paneli**: Yorumları onaylayın veya reddedin
 - **Gömülebilir Widget**: Tek satır kod ile web sitenize modern yorum duvarı ekleyin
 - **Responsive Tasarım**: Tüm cihazlarda mükemmel görünüm
+- **Güvenlik**: Rate limiting, input validation, CSP koruması
+- **Real-time Kontroller**: Username benzersizlik kontrolü
+- **Modern UI**: Tailwind CSS ve shadcn/ui ile şık arayüz
 
 ## 🛠️ Teknoloji Yığını
 
-- **Frontend/Backend**: Next.js 14 (App Router)
+- **Frontend/Backend**: Next.js 15 (App Router)
 - **Veritabanı & Auth**: Supabase
 - **Ödemeler**: Stripe
 - **UI**: Tailwind CSS + shadcn/ui
 - **Dil**: TypeScript
+- **Rate Limiting**: Upstash Redis
+- **Validation**: Zod
+- **Security**: CSP, Bot Protection, Input Sanitization
 
 ## 📦 Kurulum
 
@@ -36,16 +42,7 @@ npm install
 cp .env.example .env.local
 ```
 
-`.env.local` dosyasını düzenleyin:
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
-
-# Stripe
-STRIPE_SECRET_KEY=your_stripe_secret_key_here
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key_here
-```
+`.env.local` dosyasını düzenleyin (detaylar için .env.example dosyasına bakın)
 
 4. Supabase veritabanını kurun:
    - Supabase projesi oluşturun
@@ -106,22 +103,42 @@ CREATE POLICY "Anyone can insert testimonials" ON testimonials
    - "testimonial-videos" adında bir bucket oluşturun
    - Public access'i etkinleştirin
 
-6. Geliştirme sunucusunu başlatın:
+6. Upstash Redis kurulumu (Rate Limiting için):
+   - [Upstash](https://upstash.com/) hesabı oluşturun
+   - Redis database oluşturun
+   - REST URL ve Token'ı .env.local'e ekleyin
+
+7. Geliştirme sunucusunu başlatın:
 ```bash
 npm run dev
 ```
 
+## 🔧 Environment Variables
+
+Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmıştır:
+
+### Zorunlu Değişkenler
+- `NEXT_PUBLIC_SUPABASE_URL`: Supabase proje URL'i
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonim anahtarı
+- `STRIPE_SECRET_KEY`: Stripe gizli anahtarı
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Stripe yayınlanabilir anahtarı
+
+### Opsiyonel Değişkenler
+- `UPSTASH_REDIS_REST_URL`: Upstash Redis REST URL'i (rate limiting için)
+- `UPSTASH_REDIS_REST_TOKEN`: Upstash Redis token'ı
+
 ## 🎯 Kullanım
 
 ### Kullanıcı Kaydı ve Giriş
-- `/register` - Yeni hesap oluşturma
-- `/login` - Giriş yapma
-- `/dashboard` - Yönetim paneli
+- `/register` - Yeni hesap oluşturma (username benzersizlik kontrolü)
+- `/login` - Giriş yapma (gelişmiş hata mesajları)
+- `/dashboard` - Yönetim paneli (modüler componentler)
 
 ### Yorum Toplama
 - `/{username}` - Müşterilerin yorum bırakabileceği sayfa
 - Metin ve video yorumları desteklenir
 - 30 saniyelik otomatik video kaydı
+- Real-time form validation
 
 ### Widget Entegrasyonu
 ```html
@@ -136,6 +153,15 @@ npm run dev
     });
 </script>
 ```
+
+## 🛡️ Güvenlik Özellikleri
+
+- **Rate Limiting**: API endpoint'leri için rate limiting
+- **Input Validation**: Zod ile form validasyonu
+- **CSP Protection**: Content Security Policy
+- **Bot Protection**: Şüpheli user agent'ları engelleme
+- **Input Sanitization**: XSS koruması
+- **Environment Validation**: Runtime environment kontrolü
 
 ## 💰 Fiyatlandırma
 
@@ -163,6 +189,32 @@ npm run dev
 - Railway
 - DigitalOcean App Platform
 
+## 📁 Proje Yapısı
+
+```
+src/
+├── app/
+│   ├── [username]/          # Testimonial toplama sayfası
+│   │   ├── components/      # Modüler componentler
+│   │   ├── hooks/          # Custom hook'lar
+│   │   └── types.ts        # Tip tanımları
+│   ├── dashboard/          # Yönetim paneli
+│   │   ├── components/     # Dashboard componentleri
+│   │   └── hooks/         # Dashboard hook'ları
+│   ├── login/             # Giriş sayfası
+│   │   └── components/    # Login componentleri
+│   ├── register/          # Kayıt sayfası
+│   │   └── components/    # Register componentleri
+│   └── api/              # API route'ları
+├── components/           # Genel UI componentleri
+├── lib/                 # Utility fonksiyonları
+│   ├── env.ts          # Environment validation
+│   ├── rate-limit.ts   # Rate limiting
+│   ├── validation.ts   # Zod schemas
+│   └── supabase.ts     # Supabase client
+└── middleware.ts       # Security middleware
+```
+
 ## 🤝 Katkıda Bulunma
 
 1. Fork edin
@@ -188,3 +240,5 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 - [Stripe](https://stripe.com/) - Ödeme işlemleri
 - [Tailwind CSS](https://tailwindcss.com/) - CSS framework
 - [shadcn/ui](https://ui.shadcn.com/) - UI bileşenleri
+- [Upstash](https://upstash.com/) - Redis as a Service
+- [Zod](https://zod.dev/) - TypeScript-first schema validation
