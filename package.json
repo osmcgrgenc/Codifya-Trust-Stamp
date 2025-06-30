@@ -17,6 +17,8 @@
     "@stripe/stripe-js": "^7.4.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.50.2",
+    "@upstash/ratelimit": "^2.0.5",
+    "@upstash/redis": "^1.35.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.524.0",
@@ -26,6 +28,7 @@
     "react-hook-form": "^7.58.1",
     "stripe": "^18.2.1",
     "tailwind-merge": "^3.3.1",
+    "upstash": "^0.0.1",
     "zod": "^3.25.67"
   },
   "devDependencies": {

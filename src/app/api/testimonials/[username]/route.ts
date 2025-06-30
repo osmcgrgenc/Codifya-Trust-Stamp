@@ -1,16 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { rateLimit, testimonialLimiter } from '@/lib/rate-limit'
+import { usernameSchema } from '@/lib/validation'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   try {
+    // Resolve params promise
+    const resolvedParams = await params
+    
+    // Rate limiting
+    const rateLimitResult = await rateLimit(request, testimonialLimiter, resolvedParams.username)
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: rateLimitResult.message },
+        { status: 429 }
+      )
+    }
+
+    // Input validation
+    const validatedUsername = usernameSchema.safeParse(resolvedParams.username)
+    if (!validatedUsername.success) {
+      return NextResponse.json(
+        { error: 'Geçersiz kullanıcı adı' },
+        { status: 400 }
+      )
+    }
+
     // Kullanıcı profilini bul
     const { data: userProfile, error: profileError } = await supabase
       .from('user_profiles')
       .select('user_id')
-      .eq('username', params.username)
+      .eq('username', validatedUsername.data)
       .single()
 
     if (profileError || !userProfile) {

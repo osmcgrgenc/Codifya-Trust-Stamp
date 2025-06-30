@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Star, Video, MessageSquare, Users, Zap } from 'lucide-react'
+import { Star, Video, MessageSquare, Zap } from 'lucide-react'
 import Link from 'next/link'
 
 export default function HomePage() {
@@ -46,7 +46,7 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Freelancer'lar ve e-ticaret siteleri için müşteri yorumlarını toplamayı, 
+            Freelancer&apos;lar ve e-ticaret siteleri için müşteri yorumlarını toplamayı, 
             yönetmeyi ve web sitelerinde şık bir şekilde sergilemeyi otomatikleştiren araç.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -256,7 +256,7 @@ export default function HomePage() {
   )
 }
 
-function CheckIcon(props: any) {
+function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

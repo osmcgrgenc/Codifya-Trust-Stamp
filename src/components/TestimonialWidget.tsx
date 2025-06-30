@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -32,11 +32,7 @@ export default function TestimonialWidget({
   const [error, setError] = useState('')
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
 
-  useEffect(() => {
-    fetchTestimonials()
-  }, [username])
-
-  const fetchTestimonials = async () => {
+  const fetchTestimonials = useCallback(async () => {
     try {
       // Bu kısım gerçek API endpoint'iniz ile değiştirilecek
       const response = await fetch(`/api/testimonials/${username}`)
@@ -51,7 +47,11 @@ export default function TestimonialWidget({
     } finally {
       setLoading(false)
     }
-  }
+  }, [username, maxTestimonials])
+
+  useEffect(() => {
+    fetchTestimonials()
+  }, [fetchTestimonials])
 
   const playVideo = (videoUrl: string, testimonialId: string) => {
     setPlayingVideo(testimonialId)
