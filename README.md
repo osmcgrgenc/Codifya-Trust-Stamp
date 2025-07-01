@@ -1,28 +1,67 @@
 # Güven Damgası (Trust Stamp)
 
-Freelancer'lar ve küçük e-ticaret siteleri için müşteri yorumlarını (testimonial) video veya metin olarak toplamayı, yönetmeyi ve web sitelerinde şık bir şekilde sergilemeyi otomatikleştiren bir araç.
+Freelancer'lar ve küçük e-ticaret siteleri için müşteri yorumlarını (testimonial) video veya metin olarak toplamayı, yönetmeyi ve web sitelerinde şık bir şekilde sergilemeyi otomatikleştiren modern bir SaaS platformu.
+
+## 🎯 Proje Hakkında
+
+Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde toplamasını ve sergilemesini sağlayan kapsamlı bir çözümdür. Video yorumları, modern widget'lar ve güçlü yönetim araçları ile sosyal kanıtınızı güçlendirin.
 
 ## 🚀 Özellikler
 
+### 📝 Yorum Toplama
 - **Kolay Toplama**: Benzersiz link ile müşteri yorumlarını toplayın
 - **Video Yorumları**: 30 saniyelik video yorumları ile daha etkileyici deneyimler
-- **Yönetim Paneli**: Yorumları onaylayın veya reddedin
-- **Gömülebilir Widget**: Tek satır kod ile web sitenize modern yorum duvarı ekleyin
-- **Responsive Tasarım**: Tüm cihazlarda mükemmel görünüm
-- **Güvenlik**: Rate limiting, input validation, CSP koruması
+- **Metin Yorumları**: Hızlı ve kolay metin yorumları
 - **Real-time Kontroller**: Username benzersizlik kontrolü
-- **Modern UI**: Tailwind CSS ve shadcn/ui ile şık arayüz
+
+### 🎛️ Yönetim ve Kontrol
+- **Dashboard**: Kapsamlı yönetim paneli
+- **Yorum Onaylama**: Yorumları onaylayın veya reddedin
+- **İstatistikler**: Görüntüleme ve yorum sayıları
+- **Ayarlar Sayfası**: Hesap ve profil yönetimi
+
+### 🌐 Entegrasyon
+- **Gömülebilir Widget**: Tek satır kod ile web sitenize modern yorum duvarı ekleyin
+- **API Desteği**: RESTful API ile entegrasyon
+- **SWR Cache**: Otomatik veri güncelleme ve cache
+- **Responsive Tasarım**: Tüm cihazlarda mükemmel görünüm
+
+### 🛡️ Güvenlik ve Performans
+- **Rate Limiting**: API endpoint'leri için rate limiting
+- **Input Validation**: Zod ile form validasyonu
+- **CSP Protection**: Content Security Policy
+- **SEO Optimizasyonu**: Meta tags, OpenGraph, Twitter Cards
+- **Performance**: Lazy loading, code splitting, font optimizasyonu
 
 ## 🛠️ Teknoloji Yığını
 
-- **Frontend/Backend**: Next.js 15 (App Router)
-- **Veritabanı & Auth**: Supabase
-- **Ödemeler**: Stripe
-- **UI**: Tailwind CSS + shadcn/ui
-- **Dil**: TypeScript
+### 🎨 Frontend
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Language**: TypeScript
+- **State Management**: SWR (React Hooks)
+- **Icons**: Lucide React
+
+### 🔧 Backend & Veritabanı
+- **Backend**: Next.js API Routes
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Storage**: Supabase Storage (video dosyaları)
+- **Payments**: Stripe
+
+### 🚀 Performans & Güvenlik
+- **Caching**: SWR + Next.js Cache
 - **Rate Limiting**: Upstash Redis
 - **Validation**: Zod
 - **Security**: CSP, Bot Protection, Input Sanitization
+- **SEO**: Next.js Metadata API
+
+### 🛠️ Development Tools
+- **Package Manager**: npm
+- **Linting**: ESLint
+- **Formatting**: Prettier
+- **Type Checking**: TypeScript
+- **Environment**: dotenv
 
 ## 📦 Kurulum
 
@@ -129,18 +168,19 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
 
 ## 🎯 Kullanım
 
-### Kullanıcı Kaydı ve Giriş
-- `/register` - Yeni hesap oluşturma (username benzersizlik kontrolü)
-- `/login` - Giriş yapma (gelişmiş hata mesajları)
-- `/dashboard` - Yönetim paneli (modüler componentler)
+### 👤 Kullanıcı Yönetimi
+- **Kayıt**: `/register` - Yeni hesap oluşturma (username benzersizlik kontrolü)
+- **Giriş**: `/login` - Giriş yapma (gelişmiş hata mesajları)
+- **Dashboard**: `/dashboard` - Kapsamlı yönetim paneli
+- **Ayarlar**: `/dashboard/settings` - Hesap ve profil yönetimi
 
-### Yorum Toplama
-- `/{username}` - Müşterilerin yorum bırakabileceği sayfa
-- Metin ve video yorumları desteklenir
-- 30 saniyelik otomatik video kaydı
-- Real-time form validation
+### 📝 Yorum Toplama
+- **Profil Sayfası**: `/{username}` - Müşterilerin yorum bırakabileceği sayfa
+- **Video Yorumları**: 30 saniyelik otomatik video kaydı
+- **Metin Yorumları**: Hızlı ve kolay metin yorumları
+- **Real-time Validation**: Anlık form doğrulama
 
-### Widget Entegrasyonu
+### 🌐 Widget Entegrasyonu
 ```html
 <!-- Web sitenize ekleyin -->
 <div id="testimonial-widget"></div>
@@ -154,14 +194,30 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
 </script>
 ```
 
-## 🛡️ Güvenlik Özellikleri
+### 📊 Dashboard Özellikleri
+- **İstatistikler**: Toplam görüntüleme ve yorum sayıları
+- **Yorum Yönetimi**: Onaylama/reddetme işlemleri
+- **Link Paylaşımı**: Kolay link kopyalama ve paylaşım
+- **Ayarlar**: Profil bilgileri ve hesap yönetimi
 
+## 🛡️ Güvenlik ve Performans
+
+### 🔒 Güvenlik Özellikleri
 - **Rate Limiting**: API endpoint'leri için rate limiting
 - **Input Validation**: Zod ile form validasyonu
 - **CSP Protection**: Content Security Policy
 - **Bot Protection**: Şüpheli user agent'ları engelleme
 - **Input Sanitization**: XSS koruması
 - **Environment Validation**: Runtime environment kontrolü
+- **Authentication**: Supabase Auth ile güvenli kimlik doğrulama
+
+### ⚡ Performans Optimizasyonları
+- **Lazy Loading**: Component'lerin ihtiyaç halinde yüklenmesi
+- **Code Splitting**: Bundle boyutunun optimize edilmesi
+- **SWR Cache**: Otomatik veri güncelleme ve cache
+- **Font Optimization**: Display swap ve preload
+- **Image Optimization**: Next.js Image component'i
+- **SEO Optimization**: Meta tags, OpenGraph, Twitter Cards
 
 ## 💰 Fiyatlandırma
 
@@ -194,25 +250,57 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
 ```
 src/
 ├── app/
-│   ├── [username]/          # Testimonial toplama sayfası
-│   │   ├── components/      # Modüler componentler
-│   │   ├── hooks/          # Custom hook'lar
-│   │   └── types.ts        # Tip tanımları
-│   ├── dashboard/          # Yönetim paneli
-│   │   ├── components/     # Dashboard componentleri
-│   │   └── hooks/         # Dashboard hook'ları
-│   ├── login/             # Giriş sayfası
-│   │   └── components/    # Login componentleri
-│   ├── register/          # Kayıt sayfası
-│   │   └── components/    # Register componentleri
-│   └── api/              # API route'ları
-├── components/           # Genel UI componentleri
-├── lib/                 # Utility fonksiyonları
-│   ├── env.ts          # Environment validation
-│   ├── rate-limit.ts   # Rate limiting
-│   ├── validation.ts   # Zod schemas
-│   └── supabase.ts     # Supabase client
-└── middleware.ts       # Security middleware
+│   ├── [username]/              # Testimonial toplama sayfası
+│   │   ├── components/          # Modüler componentler
+│   │   │   ├── TestimonialForm.tsx
+│   │   │   ├── VideoRecorder.tsx
+│   │   │   ├── SuccessMessage.tsx
+│   │   │   └── UserNotFound.tsx
+│   │   ├── hooks/              # Custom hook'lar
+│   │   │   └── useUserProfile.ts
+│   │   └── types.ts            # Tip tanımları
+│   ├── dashboard/              # Yönetim paneli
+│   │   ├── components/         # Dashboard componentleri
+│   │   │   ├── DashboardHeader.tsx
+│   │   │   ├── StatsCards.tsx
+│   │   │   ├── TestimonialsList.tsx
+│   │   │   ├── TestimonialCard.tsx
+│   │   │   └── ShareLink.tsx
+│   │   ├── settings/          # Ayarlar sayfası
+│   │   │   └── page.tsx
+│   │   ├── hooks/             # Dashboard hook'ları
+│   │   │   └── useDashboard.ts
+│   │   └── page.tsx
+│   ├── login/                 # Giriş sayfası
+│   │   ├── components/        # Login componentleri
+│   │   └── page.tsx
+│   ├── register/              # Kayıt sayfası
+│   │   ├── components/        # Register componentleri
+│   │   └── page.tsx
+│   ├── api/                  # API route'ları
+│   │   ├── testimonials/
+│   │   │   └── [username]/
+│   │   │       └── route.ts
+│   │   └── user-profile/
+│   │       └── [username]/
+│   │           └── route.ts
+│   ├── layout.tsx            # Root layout
+│   ├── page.tsx              # Ana sayfa
+│   └── globals.css
+├── components/               # Genel UI componentleri
+│   ├── ui/                  # shadcn/ui componentleri
+│   ├── TestimonialWidget.tsx
+│   └── VideoPlayer.tsx
+├── lib/                     # Utility fonksiyonları
+│   ├── env.ts              # Environment validation
+│   ├── rate-limit.ts       # Rate limiting
+│   ├── validation.ts       # Zod schemas
+│   ├── supabase.ts         # Supabase client
+│   ├── stripe.ts           # Stripe configuration
+│   └── swr.ts              # SWR configuration
+├── types/                   # Global tip tanımları
+│   └── database.ts
+└── middleware.ts           # Security middleware
 ```
 
 ## 🤝 Katkıda Bulunma
@@ -233,6 +321,23 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 - Email: info@guvendamgasi.com
 - Twitter: [@guvendamgasi](https://twitter.com/guvendamgasi)
 
+## 🚀 Son Güncellemeler
+
+### v2.0.0 - Performans ve SEO İyileştirmeleri
+- **Dashboard Settings**: Kapsamlı ayarlar sayfası eklendi
+- **SWR Integration**: Otomatik veri güncelleme ve cache
+- **SEO Optimization**: Meta tags, OpenGraph, Twitter Cards
+- **Performance**: Lazy loading, code splitting, font optimizasyonu
+- **ShareLink Component**: Modern ve responsive tasarım
+- **Accessibility**: ARIA labels ve semantic HTML
+
+### v1.0.0 - Temel Özellikler
+- **User Authentication**: Supabase Auth entegrasyonu
+- **Video Testimonials**: 30 saniyelik video kayıt sistemi
+- **Dashboard**: Yorum yönetimi ve istatistikler
+- **Widget System**: Gömülebilir testimonial widget'ları
+- **Security**: Rate limiting, validation, CSP koruması
+
 ## 🙏 Teşekkürler
 
 - [Next.js](https://nextjs.org/) - React framework
@@ -242,3 +347,5 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 - [shadcn/ui](https://ui.shadcn.com/) - UI bileşenleri
 - [Upstash](https://upstash.com/) - Redis as a Service
 - [Zod](https://zod.dev/) - TypeScript-first schema validation
+- [SWR](https://swr.vercel.app/) - React Hooks for data fetching
+- [Lucide](https://lucide.dev/) - Beautiful & consistent icon toolkit
