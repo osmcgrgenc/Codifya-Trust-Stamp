@@ -58,6 +58,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       })
 
       if (error) {
+        console.log("error", error);
         // Kullanıcı dostu hata mesajları
         if (error.message.includes('Invalid login credentials')) {
           setError('E-posta veya şifre hatalı.')
