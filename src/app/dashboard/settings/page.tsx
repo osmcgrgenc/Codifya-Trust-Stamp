@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,7 +14,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, User, Mail, Shield, Trash2, Save } from 'lucide-react'
+import {
+  ArrowLeft,
+  User,
+  Mail,
+  Shield,
+  Trash2,
+  Save,
+  CheckCircle,
+  AlertCircle,
+} from 'lucide-react'
 import { useDashboard } from '../hooks/useDashboard'
 
 export default function SettingsPage() {
@@ -22,11 +31,29 @@ export default function SettingsPage() {
   const { user, loading } = useDashboard()
 
   const [formData, setFormData] = useState({
-    fullName: user?.user_metadata?.full_name || '',
-    username: user?.user_metadata?.username || '',
+    fullName: '',
+    username: '',
     bio: '',
     website: '',
   })
+
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>(
+    'idle'
+  )
+  const [errorMessage, setErrorMessage] = useState('')
+
+  // Form verilerini kullanıcı bilgileriyle doldur
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.user_metadata?.full_name || '',
+        username: user.user_metadata?.username || '',
+        bio: user.user_metadata?.bio || '',
+        website: user.user_metadata?.website || '',
+      })
+    }
+  }, [user])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -36,8 +63,51 @@ export default function SettingsPage() {
   }
 
   const handleSave = async () => {
-    // TODO: Implement save functionality
-    console.log('Saving settings:', formData)
+    if (!formData.fullName.trim() || !formData.username.trim()) {
+      setErrorMessage('Ad soyad ve kullanıcı adı gerekli')
+      setSaveStatus('error')
+      return
+    }
+
+    setIsSaving(true)
+    setSaveStatus('idle')
+    setErrorMessage('')
+
+    try {
+      const response = await fetch('/api/user-profile/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName.trim(),
+          username: formData.username.trim(),
+          bio: formData.bio.trim() || null,
+          website: formData.website.trim() || null,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Profil güncellenemedi')
+      }
+
+      setSaveStatus('success')
+
+      // 3 saniye sonra success durumunu sıfırla
+      setTimeout(() => {
+        setSaveStatus('idle')
+      }, 3000)
+    } catch (error) {
+      console.error('Save error:', error)
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Bir hata oluştu'
+      )
+      setSaveStatus('error')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleDeleteAccount = () => {
@@ -144,10 +214,40 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <Button onClick={handleSave} className='w-full'>
-                <Save className='w-4 h-4 mr-2' />
-                Değişiklikleri Kaydet
+              <Button
+                onClick={handleSave}
+                className='w-full'
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <div className='w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                    Kaydediliyor...
+                  </>
+                ) : (
+                  <>
+                    <Save className='w-4 h-4 mr-2' />
+                    Değişiklikleri Kaydet
+                  </>
+                )}
               </Button>
+
+              {/* Status Messages */}
+              {saveStatus === 'success' && (
+                <div className='flex items-center space-x-2 p-3 bg-green-50 border border-green-200 rounded-md'>
+                  <CheckCircle className='w-5 h-5 text-green-600' />
+                  <span className='text-green-700 text-sm'>
+                    Profil başarıyla güncellendi!
+                  </span>
+                </div>
+              )}
+
+              {saveStatus === 'error' && (
+                <div className='flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-md'>
+                  <AlertCircle className='w-5 h-5 text-red-600' />
+                  <span className='text-red-700 text-sm'>{errorMessage}</span>
+                </div>
+              )}
             </CardContent>
           </Card>
 
