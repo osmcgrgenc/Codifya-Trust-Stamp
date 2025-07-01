@@ -11,6 +11,8 @@ interface User {
   user_metadata?: {
     username?: string
     full_name?: string
+    bio?: string
+    website?: string
   }
 }
 

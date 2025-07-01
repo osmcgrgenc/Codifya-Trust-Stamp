@@ -50,6 +50,13 @@ export async function PUT(request: NextRequest) {
       .neq('user_id', user.id)
       .single()
 
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('Username check error:', checkError)
+      return new NextResponse('Kullanıcı adı kontrolü başarısız', {
+        status: 500,
+      })
+    }
+
     if (existingUser) {
       return new NextResponse('Bu kullanıcı adı zaten kullanılıyor', {
         status: 409,

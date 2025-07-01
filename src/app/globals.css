@@ -120,3 +120,65 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* 500x500 resmin ortasını göster */
+  .crop-center {
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Farklı boyutlar için crop class'ları */
+  .crop-center-200 {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .crop-center-300 {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .crop-center-400 {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .crop-center-500 {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Responsive crop class'ları */
+  .crop-center-sm {
+    @apply w-32 h-32;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .crop-center-md {
+    @apply w-48 h-48;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .crop-center-lg {
+    @apply w-64 h-64;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .crop-center-xl {
+    @apply w-96 h-96;
+    object-fit: cover;
+    object-position: center;
+  }
+}

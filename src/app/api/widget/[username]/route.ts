@@ -3,10 +3,10 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   try {
-    const { username } = params
+    const { username } = await params
 
     if (!username) {
       return new NextResponse('Username gerekli', { status: 400 })
@@ -20,7 +20,7 @@ export async function GET(
       .single()
 
     if (profileError || !profile) {
-      return new NextResponse('Kullanıcı bulunamadı', { status: 404 })
+      return new NextResponse('Kullanıcı bulunamadı', { status: 403 })
     }
 
     // Onaylanmış testimonial'ları al

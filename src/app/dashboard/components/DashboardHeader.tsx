@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Settings, LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 interface DashboardHeaderProps {
   onLogout: () => void
@@ -18,11 +19,14 @@ export function DashboardHeader({ onLogout }: DashboardHeaderProps) {
   return (
     <header className='bg-white border-b'>
       <div className='container mx-auto px-4 py-4 flex justify-between items-center'>
-        <div className='flex items-center space-x-2'>
-          <div className='w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center'>
-            <span className='text-white font-bold text-sm'>GD</span>
-          </div>
-          <span className='text-xl font-bold text-gray-900'>Trustora</span>
+        <div className='flex items-center space-x-2 h-10'>
+          <Image
+            src='/logo.png'
+            alt='Trustora'
+            width={150}
+            height={28}
+            className='crop-center-sm'
+          />
         </div>
         <div className='flex items-center space-x-4'>
           <Button variant='ghost' size='sm' onClick={handleSettingsClick}>
