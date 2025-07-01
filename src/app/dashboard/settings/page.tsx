@@ -117,7 +117,9 @@ export default function SettingsPage() {
       )
     ) {
       // TODO: Implement account deletion
-      console.log('Deleting account...')
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Deleting account...')
+      }
     }
   }
 

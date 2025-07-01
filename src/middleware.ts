@@ -117,7 +117,9 @@ export async function middleware(request: NextRequest) {
       ]
 
   if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
-    console.log(`Blocked suspicious request from: ${userAgent}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Blocked suspicious request from: ${userAgent}`)
+    }
     return new NextResponse('Forbidden', { status: 403 })
   }
 
