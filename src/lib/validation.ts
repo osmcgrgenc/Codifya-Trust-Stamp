@@ -62,23 +62,38 @@ export function sanitizeHtml(html: string): string {
     .replace(/on\w+\s*=/gi, '')
 }
 
-// Validate file upload
+// Validate file upload (client-side only)
 export const fileUploadSchema = z.object({
-  file: z.instanceof(File),
+  file: typeof window !== 'undefined' ? z.instanceof(File) : z.any(),
   maxSize: z.number().default(10 * 1024 * 1024), // 10MB
   allowedTypes: z.array(z.string()).default(['video/webm', 'video/mp4']),
 })
 
 export function validateFileUpload(
-  file: File,
+  file: unknown,
   maxSize = 10 * 1024 * 1024,
   allowedTypes = ['video/webm', 'video/mp4']
 ) {
-  if (file.size > maxSize) {
+  // Server-side'da validation yapma
+  if (typeof window === 'undefined') {
+    return true
+  }
+
+  // Type guard for File object
+  if (
+    !file ||
+    typeof file !== 'object' ||
+    !('size' in file) ||
+    !('type' in file)
+  ) {
+    throw new Error('Geçersiz dosya objesi')
+  }
+
+  if ((file as { size: number }).size > maxSize) {
     throw new Error('Dosya boyutu çok büyük')
   }
 
-  if (!allowedTypes.includes(file.type)) {
+  if (!allowedTypes.includes((file as { type: string }).type)) {
     throw new Error('Desteklenmeyen dosya türü')
   }
 
