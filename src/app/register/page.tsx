@@ -13,13 +13,13 @@ export default function RegisterPage() {
   const [error, setError] = useState('')
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4'>
+      <Card className='w-full max-w-md'>
         <RegisterHeader />
         <CardContent>
-          <RegisterForm 
-            onSuccess={() => setSuccess(true)} 
-            onError={(error) => setError(error)}
+          <RegisterForm
+            onSuccess={() => setSuccess(true)}
+            onError={error => setError(error)}
           />
           <ErrorMessage error={error} />
           <SuccessMessage show={success} />
@@ -28,4 +28,4 @@ export default function RegisterPage() {
       </Card>
     </div>
   )
-} 
+}

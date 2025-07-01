@@ -34,4 +34,4 @@ export function useUserProfile(username: string) {
   }, [username])
 
   return { userProfile, loading, error }
-} 
+}

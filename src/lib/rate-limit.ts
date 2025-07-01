@@ -3,12 +3,13 @@ import { Redis } from '@upstash/redis'
 import { serverEnv } from './env'
 
 // Redis client (optional - falls back to memory if not configured)
-const redis = serverEnv.UPSTASH_REDIS_REST_URL && serverEnv.UPSTASH_REDIS_REST_TOKEN
-  ? new Redis({
-      url: serverEnv.UPSTASH_REDIS_REST_URL!,
-      token: serverEnv.UPSTASH_REDIS_REST_TOKEN!,
-    })
-  : undefined
+const redis =
+  serverEnv.UPSTASH_REDIS_REST_URL && serverEnv.UPSTASH_REDIS_REST_TOKEN
+    ? new Redis({
+        url: serverEnv.UPSTASH_REDIS_REST_URL!,
+        token: serverEnv.UPSTASH_REDIS_REST_TOKEN!,
+      })
+    : undefined
 
 // Helper function to create rate limiters with fallback
 const createRateLimiter = (prefix: string, limit: number, window: string) => {
@@ -21,7 +22,7 @@ const createRateLimiter = (prefix: string, limit: number, window: string) => {
       prefix,
     })
   }
-  
+
   return new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(limit, window as Duration),
@@ -33,7 +34,11 @@ const createRateLimiter = (prefix: string, limit: number, window: string) => {
 // Rate limiters
 export const apiLimiter = createRateLimiter('api_limiter', 10, '1 m')
 export const authLimiter = createRateLimiter('auth_limiter', 5, '5 m')
-export const testimonialLimiter = createRateLimiter('testimonial_limiter', 3, '1 h')
+export const testimonialLimiter = createRateLimiter(
+  'testimonial_limiter',
+  3,
+  '1 h'
+)
 
 // IP cache for performance with proper cleanup
 interface CacheEntry {
@@ -48,19 +53,19 @@ const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
 export function getClientIP(request: Request): string {
   // Create a more unique cache key to prevent collisions
   const cacheKey = `${request.url}-${request.headers.get('user-agent') || ''}-${request.headers.get('x-forwarded-for') || ''}`
-  
+
   // Check cache first
   if (ipCache.has(cacheKey)) {
     const entry = ipCache.get(cacheKey)!
     return entry.ip
   }
-  
+
   const forwarded = request.headers.get('x-forwarded-for')
   const realIP = request.headers.get('x-real-ip')
   const cfConnectingIP = request.headers.get('cf-connecting-ip')
-  
+
   let ip = 'unknown'
-  
+
   if (forwarded) {
     ip = forwarded.split(',')[0].trim()
   } else if (realIP) {
@@ -68,15 +73,15 @@ export function getClientIP(request: Request): string {
   } else if (cfConnectingIP) {
     ip = cfConnectingIP
   }
-  
+
   // Create timeout for cleanup
   const timeoutId = setTimeout(() => {
     ipCache.delete(cacheKey)
   }, CACHE_TTL)
-  
+
   // Cache the result with timeout reference
   ipCache.set(cacheKey, { ip, timeoutId })
-  
+
   return ip
 }
 
@@ -98,40 +103,42 @@ export async function rateLimit(
   try {
     const ip = getClientIP(request)
     const id = identifier?.toString() || ip
-    
+
     const { success, limit, reset, remaining } = await limiter.limit(id)
-    
+
     if (!success) {
       return {
         success: false,
         limit,
         reset,
         remaining,
-        message: 'Rate limit exceeded. Please try again later.'
+        message: 'Rate limit exceeded. Please try again later.',
       }
     }
-    
+
     return {
       success: true,
       limit,
       reset,
-      remaining
+      remaining,
     }
   } catch (error) {
     console.error('Rate limiting error:', error)
-    
+
     // Fallback: allow request if rate limiting fails
     return {
       success: true,
       limit: 0,
       reset: 0,
-      remaining: 0
+      remaining: 0,
     }
   }
 }
 
 // Utility function to get rate limit headers
-export function getRateLimitHeaders(result: RateLimitResult): Record<string, string> {
+export function getRateLimitHeaders(
+  result: RateLimitResult
+): Record<string, string> {
   return {
     'X-RateLimit-Limit': result.limit.toString(),
     'X-RateLimit-Remaining': result.remaining.toString(),
@@ -151,6 +158,6 @@ export function clearIPCache(): void {
 export function getCacheStats(): { size: number; keys: string[] } {
   return {
     size: ipCache.size,
-    keys: Array.from(ipCache.keys())
+    keys: Array.from(ipCache.keys()),
   }
-} 
+}

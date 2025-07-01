@@ -9,24 +9,28 @@ Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde topla
 ## 🚀 Özellikler
 
 ### 📝 Yorum Toplama
+
 - **Kolay Toplama**: Benzersiz link ile müşteri yorumlarını toplayın
 - **Video Yorumları**: 30 saniyelik video yorumları ile daha etkileyici deneyimler
 - **Metin Yorumları**: Hızlı ve kolay metin yorumları
 - **Real-time Kontroller**: Username benzersizlik kontrolü
 
 ### 🎛️ Yönetim ve Kontrol
+
 - **Dashboard**: Kapsamlı yönetim paneli
 - **Yorum Onaylama**: Yorumları onaylayın veya reddedin
 - **İstatistikler**: Görüntüleme ve yorum sayıları
 - **Ayarlar Sayfası**: Hesap ve profil yönetimi
 
 ### 🌐 Entegrasyon
+
 - **Gömülebilir Widget**: Tek satır kod ile web sitenize modern yorum duvarı ekleyin
 - **API Desteği**: RESTful API ile entegrasyon
 - **SWR Cache**: Otomatik veri güncelleme ve cache
 - **Responsive Tasarım**: Tüm cihazlarda mükemmel görünüm
 
 ### 🛡️ Güvenlik ve Performans
+
 - **Rate Limiting**: API endpoint'leri için rate limiting
 - **Input Validation**: Zod ile form validasyonu
 - **CSP Protection**: Content Security Policy
@@ -36,6 +40,7 @@ Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde topla
 ## 🛠️ Teknoloji Yığını
 
 ### 🎨 Frontend
+
 - **Framework**: Next.js 15 (App Router)
 - **Styling**: Tailwind CSS + shadcn/ui
 - **Language**: TypeScript
@@ -43,6 +48,7 @@ Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde topla
 - **Icons**: Lucide React
 
 ### 🔧 Backend & Veritabanı
+
 - **Backend**: Next.js API Routes
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth
@@ -50,6 +56,7 @@ Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde topla
 - **Payments**: Stripe
 
 ### 🚀 Performans & Güvenlik
+
 - **Caching**: SWR + Next.js Cache
 - **Rate Limiting**: Upstash Redis
 - **Validation**: Zod
@@ -57,6 +64,7 @@ Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde topla
 - **SEO**: Next.js Metadata API
 
 ### 🛠️ Development Tools
+
 - **Package Manager**: npm
 - **Linting**: ESLint
 - **Formatting**: Prettier
@@ -66,17 +74,20 @@ Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde topla
 ## 📦 Kurulum
 
 1. Projeyi klonlayın:
+
 ```bash
 git clone https://github.com/your-username/trust-stamp.git
 cd trust-stamp
 ```
 
 2. Bağımlılıkları yükleyin:
+
 ```bash
 npm install
 ```
 
 3. Environment değişkenlerini ayarlayın:
+
 ```bash
 cp .env.example .env.local
 ```
@@ -148,6 +159,7 @@ CREATE POLICY "Anyone can insert testimonials" ON testimonials
    - REST URL ve Token'ı .env.local'e ekleyin
 
 7. Geliştirme sunucusunu başlatın:
+
 ```bash
 npm run dev
 ```
@@ -157,30 +169,35 @@ npm run dev
 Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmıştır:
 
 ### Zorunlu Değişkenler
+
 - `NEXT_PUBLIC_SUPABASE_URL`: Supabase proje URL'i
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonim anahtarı
 - `STRIPE_SECRET_KEY`: Stripe gizli anahtarı
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Stripe yayınlanabilir anahtarı
 
 ### Opsiyonel Değişkenler
+
 - `UPSTASH_REDIS_REST_URL`: Upstash Redis REST URL'i (rate limiting için)
 - `UPSTASH_REDIS_REST_TOKEN`: Upstash Redis token'ı
 
 ## 🎯 Kullanım
 
 ### 👤 Kullanıcı Yönetimi
+
 - **Kayıt**: `/register` - Yeni hesap oluşturma (username benzersizlik kontrolü)
 - **Giriş**: `/login` - Giriş yapma (gelişmiş hata mesajları)
 - **Dashboard**: `/dashboard` - Kapsamlı yönetim paneli
 - **Ayarlar**: `/dashboard/settings` - Hesap ve profil yönetimi
 
 ### 📝 Yorum Toplama
+
 - **Profil Sayfası**: `/{username}` - Müşterilerin yorum bırakabileceği sayfa
 - **Video Yorumları**: 30 saniyelik otomatik video kaydı
 - **Metin Yorumları**: Hızlı ve kolay metin yorumları
 - **Real-time Validation**: Anlık form doğrulama
 
 ### 🌐 Widget Entegrasyonu
+
 ```html
 <!-- Web sitenize ekleyin -->
 <div id="testimonial-widget"></div>
@@ -189,12 +206,13 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
   fetch('https://your-domain.com/api/widget/username')
     .then(response => response.text())
     .then(html => {
-      document.getElementById('testimonial-widget').innerHTML = html;
-    });
+      document.getElementById('testimonial-widget').innerHTML = html
+    })
 </script>
 ```
 
 ### 📊 Dashboard Özellikleri
+
 - **İstatistikler**: Toplam görüntüleme ve yorum sayıları
 - **Yorum Yönetimi**: Onaylama/reddetme işlemleri
 - **Link Paylaşımı**: Kolay link kopyalama ve paylaşım
@@ -203,6 +221,7 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
 ## 🛡️ Güvenlik ve Performans
 
 ### 🔒 Güvenlik Özellikleri
+
 - **Rate Limiting**: API endpoint'leri için rate limiting
 - **Input Validation**: Zod ile form validasyonu
 - **CSP Protection**: Content Security Policy
@@ -212,6 +231,7 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
 - **Authentication**: Supabase Auth ile güvenli kimlik doğrulama
 
 ### ⚡ Performans Optimizasyonları
+
 - **Lazy Loading**: Component'lerin ihtiyaç halinde yüklenmesi
 - **Code Splitting**: Bundle boyutunun optimize edilmesi
 - **SWR Cache**: Otomatik veri güncelleme ve cache
@@ -235,12 +255,14 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
 ## 🚀 Deployment
 
 ### Vercel (Önerilen)
+
 1. Vercel hesabı oluşturun
 2. GitHub repository'nizi bağlayın
 3. Environment değişkenlerini ayarlayın
 4. Deploy edin
 
 ### Diğer Platformlar
+
 - Netlify
 - Railway
 - DigitalOcean App Platform
@@ -324,6 +346,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 ## 🚀 Son Güncellemeler
 
 ### v2.0.0 - Performans ve SEO İyileştirmeleri
+
 - **Dashboard Settings**: Kapsamlı ayarlar sayfası eklendi
 - **SWR Integration**: Otomatik veri güncelleme ve cache
 - **SEO Optimization**: Meta tags, OpenGraph, Twitter Cards
@@ -332,6 +355,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 - **Accessibility**: ARIA labels ve semantic HTML
 
 ### v1.0.0 - Temel Özellikler
+
 - **User Authentication**: Supabase Auth entegrasyonu
 - **Video Testimonials**: 30 saniyelik video kayıt sistemi
 - **Dashboard**: Yorum yönetimi ve istatistikler

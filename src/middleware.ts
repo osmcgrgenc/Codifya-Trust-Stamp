@@ -10,14 +10,16 @@ export async function middleware(request: NextRequest) {
   // Rate limiting for API routes
   if (pathname.startsWith('/api/')) {
     try {
-      const limiter = pathname.startsWith('/api/auth') ? authLimiter : apiLimiter
+      const limiter = pathname.startsWith('/api/auth')
+        ? authLimiter
+        : apiLimiter
       const result = await rateLimit(request, limiter)
-      
+
       if (!result.success) {
         return new NextResponse(
-          JSON.stringify({ 
+          JSON.stringify({
             error: result.message,
-            retryAfter: Math.ceil((result.reset - Date.now()) / 1000)
+            retryAfter: Math.ceil((result.reset - Date.now()) / 1000),
           }),
           {
             status: 429,
@@ -26,8 +28,10 @@ export async function middleware(request: NextRequest) {
               'X-RateLimit-Limit': result.limit.toString(),
               'X-RateLimit-Remaining': result.remaining.toString(),
               'X-RateLimit-Reset': result.reset.toString(),
-              'Retry-After': Math.ceil((result.reset - Date.now()) / 1000).toString(),
-            }
+              'Retry-After': Math.ceil(
+                (result.reset - Date.now()) / 1000
+              ).toString(),
+            },
           }
         )
       }
@@ -39,13 +43,16 @@ export async function middleware(request: NextRequest) {
 
   // Security headers
   const response = NextResponse.next()
-  
+
   // Security headers
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
-  
+  response.headers.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=()'
+  )
+
   // Content Security Policy - Fixed for Next.js compatibility
   if (!isDevelopment) {
     const cspDirectives = [
@@ -55,7 +62,7 @@ export async function middleware(request: NextRequest) {
       "img-src 'self' data: https: blob:",
       "font-src 'self'",
       "connect-src 'self' https://*.supabase.co https://api.stripe.com https://*.supabase.com",
-      "frame-src https://js.stripe.com",
+      'frame-src https://js.stripe.com',
       "media-src 'self' blob: https:",
       "object-src 'none'",
       "base-uri 'self'",
@@ -67,12 +74,17 @@ export async function middleware(request: NextRequest) {
   // Add rate limit headers to response if available
   if (pathname.startsWith('/api/')) {
     try {
-      const limiter = pathname.startsWith('/api/auth') ? authLimiter : apiLimiter
+      const limiter = pathname.startsWith('/api/auth')
+        ? authLimiter
+        : apiLimiter
       const result = await rateLimit(request, limiter)
-      
+
       if (result.success) {
         response.headers.set('X-RateLimit-Limit', result.limit.toString())
-        response.headers.set('X-RateLimit-Remaining', result.remaining.toString())
+        response.headers.set(
+          'X-RateLimit-Remaining',
+          result.remaining.toString()
+        )
         response.headers.set('X-RateLimit-Reset', result.reset.toString())
       }
     } catch {
@@ -82,15 +94,10 @@ export async function middleware(request: NextRequest) {
 
   // Block suspicious requests with more patterns (less aggressive in development)
   const userAgent = request.headers.get('user-agent') || ''
-  
+
   // Only block obvious bots in development
-  const suspiciousPatterns = isDevelopment 
-    ? [
-        /bot/i,
-        /crawler/i,
-        /spider/i,
-        /scraper/i,
-      ]
+  const suspiciousPatterns = isDevelopment
+    ? [/bot/i, /crawler/i, /spider/i, /scraper/i]
     : [
         /bot/i,
         /crawler/i,
@@ -108,7 +115,7 @@ export async function middleware(request: NextRequest) {
         /axios/i,
         /fetch/i,
       ]
-  
+
   if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
     console.log(`Blocked suspicious request from: ${userAgent}`)
     return new NextResponse('Forbidden', { status: 403 })
@@ -116,7 +123,8 @@ export async function middleware(request: NextRequest) {
 
   // Performance monitoring
   const duration = Date.now() - startTime
-  if (duration > 100) { // Log slow middleware executions
+  if (duration > 100) {
+    // Log slow middleware executions
     console.log(`Slow middleware execution: ${duration}ms for ${pathname}`)
   }
 
@@ -135,4 +143,4 @@ export const config = {
      */
     '/((?!_next/static|_next/image|favicon.ico|public/|api/).*)',
   ],
-} 
+}

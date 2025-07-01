@@ -1,5 +1,5 @@
-import type { NextConfig } from "next";
-import bundleAnalyzer from '@next/bundle-analyzer';
+import type { NextConfig } from 'next'
+import bundleAnalyzer from '@next/bundle-analyzer'
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -9,10 +9,10 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
-  
+
   // Performance optimizations
   compress: true,
-  
+
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
-  
+
   // Bundle analyzer (uncomment for analysis)
   // webpack: (config, { isServer }) => {
   //   if (!isServer) {
@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
   //   }
   //   return config;
   // },
-  
+
   // Headers for performance
   async headers() {
     return [
@@ -67,9 +67,10 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: process.env.NODE_ENV === 'production' 
-              ? 'https://yourdomain.com' 
-              : 'http://localhost:3000',
+            value:
+              process.env.NODE_ENV === 'production'
+                ? 'https://yourdomain.com'
+                : 'http://localhost:3000',
           },
           {
             key: 'Access-Control-Allow-Methods',
@@ -89,15 +90,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
-  
+
   // Security: Disable powered by header
   poweredByHeader: false,
-  
+
   // External packages for server components
   serverExternalPackages: ['@upstash/redis'],
-  
+
   // Redirects for better SEO
   async redirects() {
     return [
@@ -106,8 +107,8 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
-    ];
+    ]
   },
-};
+}
 
-export default withBundleAnalyzer(nextConfig);
+export default withBundleAnalyzer(nextConfig)

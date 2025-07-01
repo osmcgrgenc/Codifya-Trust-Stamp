@@ -14,19 +14,23 @@ export async function GET(
   try {
     // Resolve params promise
     const resolvedParams = await params
-    
+
     // Rate limiting
-    const rateLimitResult = await rateLimit(request, testimonialLimiter, resolvedParams.username)
+    const rateLimitResult = await rateLimit(
+      request,
+      testimonialLimiter,
+      resolvedParams.username
+    )
     if (!rateLimitResult.success) {
       return NextResponse.json(
         { error: rateLimitResult.message },
-        { 
+        {
           status: 429,
           headers: {
             'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
         }
       )
     }
@@ -72,25 +76,28 @@ export async function GET(
 
     // Performance headers
     const response = NextResponse.json({ testimonials: testimonials || [] })
-    
+
     // Cache headers for better performance
-    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')
+    response.headers.set(
+      'Cache-Control',
+      'public, s-maxage=300, stale-while-revalidate=600'
+    )
     response.headers.set('X-Cache-Status', 'MISS')
-    
+
     // Compression hint
     response.headers.set('Vary', 'Accept-Encoding')
-    
+
     return response
   } catch (error) {
     console.error('API hatası:', error)
     return NextResponse.json(
       { error: 'Sunucu hatası' },
-      { 
+      {
         status: 500,
         headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
-        }
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
       }
     )
   }
-} 
+}

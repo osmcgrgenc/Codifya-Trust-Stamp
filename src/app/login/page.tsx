@@ -11,8 +11,8 @@ export default function LoginPage() {
   const [success, setSuccess] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4'>
+      <Card className='w-full max-w-md'>
         <LoginHeader />
         <CardContent>
           <LoginForm onSuccess={() => setSuccess(true)} />
@@ -22,4 +22,4 @@ export default function LoginPage() {
       </Card>
     </div>
   )
-} 
+}

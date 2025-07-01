@@ -3,4 +3,4 @@ export interface UserProfile {
   username: string
   display_name?: string
   avatar_url?: string
-} 
+}

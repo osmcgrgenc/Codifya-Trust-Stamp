@@ -70,4 +70,4 @@ export async function optimisticUpdate<T>(
     // Revert on error
     throw error
   }
-} 
+}

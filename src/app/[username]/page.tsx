@@ -13,10 +13,10 @@ interface PageProps {
 export default function TestimonialPage({ params }: PageProps) {
   const [username, setUsername] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
-  
+
   // Resolve params promise
   useEffect(() => {
-    params.then((resolvedParams) => {
+    params.then(resolvedParams => {
       setUsername(resolvedParams.username)
       setIsLoading(false)
     })
@@ -26,7 +26,11 @@ export default function TestimonialPage({ params }: PageProps) {
   const [submitted, setSubmitted] = useState(false)
 
   if (isLoading || loading) {
-    return <div className="min-h-screen flex items-center justify-center">Yükleniyor...</div>
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        Yükleniyor...
+      </div>
+    )
   }
 
   if (error || !userProfile) {
@@ -35,17 +39,17 @@ export default function TestimonialPage({ params }: PageProps) {
 
   if (submitted) {
     return (
-      <SuccessMessage 
-        userProfile={userProfile} 
-        onReset={() => setSubmitted(false)} 
+      <SuccessMessage
+        userProfile={userProfile}
+        onReset={() => setSubmitted(false)}
       />
     )
   }
 
   return (
-    <TestimonialForm 
-      userProfile={userProfile} 
-      onSuccess={() => setSubmitted(true)} 
+    <TestimonialForm
+      userProfile={userProfile}
+      onSuccess={() => setSubmitted(true)}
     />
   )
-} 
+}

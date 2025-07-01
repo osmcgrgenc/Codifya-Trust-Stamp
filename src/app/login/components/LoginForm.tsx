@@ -18,7 +18,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({})
   const router = useRouter()
 
   const validateForm = () => {
@@ -29,8 +31,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     } catch (error: unknown) {
       const errors: Record<string, string> = {}
       if (error && typeof error === 'object' && 'errors' in error) {
-        const zodError = error as { errors: Array<{ path: string[], message: string }> }
-        zodError.errors?.forEach((err) => {
+        const zodError = error as {
+          errors: Array<{ path: string[]; message: string }>
+        }
+        zodError.errors?.forEach(err => {
           errors[err.path[0]] = err.message
         })
       }
@@ -58,14 +62,16 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       })
 
       if (error) {
-        console.log("error", error);
+        console.log('error', error)
         // Kullanıcı dostu hata mesajları
         if (error.message.includes('Invalid login credentials')) {
           setError('E-posta veya şifre hatalı.')
         } else if (error.message.includes('User not found')) {
           setError('Kullanıcı bulunamadı.')
         } else if (error.message.includes('rate limit')) {
-          setError('Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin.')
+          setError(
+            'Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin.'
+          )
         } else {
           setError('Giriş yapılamadı. Lütfen bilgilerinizi kontrol edin.')
         }
@@ -83,63 +89,89 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   }
 
   return (
-    <form onSubmit={handleLogin} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="email">E-posta</Label>
+    <form onSubmit={handleLogin} className='space-y-4'>
+      <div className='space-y-2'>
+        <Label htmlFor='email'>E-posta</Label>
         <Input
-          id="email"
-          type="email"
-          placeholder="ornek@email.com"
+          id='email'
+          type='email'
+          placeholder='ornek@email.com'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           required
           className={validationErrors.email ? 'border-red-500' : ''}
         />
         {validationErrors.email && (
-          <p className="text-red-500 text-sm">{validationErrors.email}</p>
+          <p className='text-red-500 text-sm'>{validationErrors.email}</p>
         )}
       </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="password">Şifre</Label>
-        <div className="relative">
+
+      <div className='space-y-2'>
+        <Label htmlFor='password'>Şifre</Label>
+        <div className='relative'>
           <Input
-            id="password"
+            id='password'
             type={showPassword ? 'text' : 'password'}
-            placeholder="Şifrenizi girin"
+            placeholder='Şifrenizi girin'
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             required
             className={validationErrors.password ? 'border-red-500' : ''}
           />
           <button
-            type="button"
+            type='button'
             tabIndex={-1}
-            className="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
-            onClick={() => setShowPassword((v) => !v)}
+            className='absolute right-2 top-2 text-gray-500 hover:text-gray-700'
+            onClick={() => setShowPassword(v => !v)}
             aria-label={showPassword ? 'Şifreyi gizle' : 'Şifreyi göster'}
           >
             {showPassword ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.657.403-3.22 1.125-4.575M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.364-2.364A9.956 9.956 0 0022 9c0 5.523-4.477 10-10 10a9.956 9.956 0 01-4.636-1.364" /></svg>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-5 w-5'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.657.403-3.22 1.125-4.575M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.364-2.364A9.956 9.956 0 0022 9c0 5.523-4.477 10-10 10a9.956 9.956 0 01-4.636-1.364'
+                />
+              </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm2.828-2.828A9.956 9.956 0 0122 12c0 5.523-4.477 10-10 10S2 17.523 2 12c0-2.21.896-4.21 2.343-5.657" /></svg>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-5 w-5'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M15 12a3 3 0 11-6 0 3 3 0 016 0zm2.828-2.828A9.956 9.956 0 0122 12c0 5.523-4.477 10-10 10S2 17.523 2 12c0-2.21.896-4.21 2.343-5.657'
+                />
+              </svg>
             )}
           </button>
         </div>
         {validationErrors.password && (
-          <p className="text-red-500 text-sm">{validationErrors.password}</p>
+          <p className='text-red-500 text-sm'>{validationErrors.password}</p>
         )}
       </div>
 
       {error && (
-        <div className="text-red-500 text-sm bg-red-50 p-3 rounded-md">
+        <div className='text-red-500 text-sm bg-red-50 p-3 rounded-md'>
           {error}
         </div>
       )}
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type='submit' className='w-full' disabled={loading}>
         {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
       </Button>
     </form>
   )
-} 
+}
