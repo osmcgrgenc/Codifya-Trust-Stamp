@@ -74,5 +74,3 @@ export const env = {
   ...clientEnv,
   ...serverEnv,
 };
-
-export default env;

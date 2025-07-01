@@ -3,6 +3,10 @@ import { supabase } from '@/lib/supabase'
 import { rateLimit, testimonialLimiter } from '@/lib/rate-limit'
 import { usernameSchema } from '@/lib/validation'
 
+// Cache configuration
+export const revalidate = 300 // 5 minutes
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ username: string }> }
@@ -16,7 +20,14 @@ export async function GET(
     if (!rateLimitResult.success) {
       return NextResponse.json(
         { error: rateLimitResult.message },
-        { status: 429 }
+        { 
+          status: 429,
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        }
       )
     }
 
@@ -59,12 +70,27 @@ export async function GET(
       )
     }
 
-    return NextResponse.json({ testimonials: testimonials || [] })
+    // Performance headers
+    const response = NextResponse.json({ testimonials: testimonials || [] })
+    
+    // Cache headers for better performance
+    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')
+    response.headers.set('X-Cache-Status', 'MISS')
+    
+    // Compression hint
+    response.headers.set('Vary', 'Accept-Encoding')
+    
+    return response
   } catch (error) {
     console.error('API hatası:', error)
     return NextResponse.json(
       { error: 'Sunucu hatası' },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
+      }
     )
   }
 } 
