@@ -1,17 +1,18 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback, Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Star, Play } from 'lucide-react'
+import { useTestimonials } from '@/lib/swr'
+import { OptimizedAvatar } from '@/components/ui/avatar'
 
-interface TestimonialWidgetProps {
-  username: string
-  theme?: 'light' | 'dark'
-  showLogo?: boolean
-  maxTestimonials?: number
-}
+// Lazy load video player
+const VideoPlayer = dynamic(() => import('./VideoPlayer').then(mod => ({ default: mod.VideoPlayer })), {
+  loading: () => <div className="aspect-video bg-gray-200 animate-pulse rounded" />,
+  ssr: false
+})
 
 interface Testimonial {
   id: string
@@ -19,173 +20,111 @@ interface Testimonial {
   content: string
   video_url?: string
   created_at: string
+  avatar_url?: string
 }
 
-export default function TestimonialWidget({ 
-  username, 
-  theme = 'light', 
-  showLogo = true,
-  maxTestimonials = 5 
+interface TestimonialWidgetProps {
+  username: string
+  maxTestimonials?: number
+  showVideos?: boolean
+}
+
+export default function TestimonialWidget({
+  username,
+  maxTestimonials = 5,
+  showVideos = true
 }: TestimonialWidgetProps) {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
+  
+  // SWR ile veri çekme
+  const { testimonials, isLoading, error } = useTestimonials(username)
 
-  const fetchTestimonials = useCallback(async () => {
-    try {
-      // Bu kısım gerçek API endpoint'iniz ile değiştirilecek
-      const response = await fetch(`/api/testimonials/${username}`)
-      if (response.ok) {
-        const data = await response.json()
-        setTestimonials(data.testimonials.slice(0, maxTestimonials))
-      } else {
-        setError('Yorumlar yüklenemedi')
-      }
-    } catch {
-      setError('Bağlantı hatası')
-    } finally {
-      setLoading(false)
-    }
-  }, [username, maxTestimonials])
+  const handleVideoPlay = useCallback((videoId: string) => {
+    setPlayingVideo(videoId)
+  }, [])
 
-  useEffect(() => {
-    fetchTestimonials()
-  }, [fetchTestimonials])
-
-  const playVideo = (videoUrl: string, testimonialId: string) => {
-    setPlayingVideo(testimonialId)
-  }
-
-  const stopVideo = () => {
+  const handleVideoClose = useCallback(() => {
     setPlayingVideo(null)
-  }
+  }, [])
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'}`}>
-        <div className="animate-pulse space-y-3">
-          <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-        </div>
+      <div className="space-y-4">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-24 bg-gray-100 animate-pulse rounded" />
+        ))}
       </div>
     )
   }
 
-  if (error) {
-    return (
-      <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-800 text-gray-300' : 'bg-gray-50 text-gray-600'}`}>
-        <p className="text-sm">{error}</p>
-      </div>
-    )
-  }
-
-  if (testimonials.length === 0) {
+  if (error || testimonials.length === 0) {
     return null
   }
 
+  // Maksimum yorum sayısını sınırla
+  const limitedTestimonials = testimonials.slice(0, maxTestimonials) as Testimonial[]
+
   return (
-    <div className={`testimonial-widget ${theme === 'dark' ? 'dark' : ''}`}>
-      <div className="space-y-4">
-        {testimonials.map((testimonial) => (
-          <Card key={testimonial.id} className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
-            <CardContent className="p-4">
-              <div className="flex items-start space-x-3">
-                <Avatar className="w-10 h-10">
-                  <AvatarFallback className={`${theme === 'dark' ? 'bg-gray-700 text-gray-300' : 'bg-gray-100'}`}>
-                    {testimonial.customer_name.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <h4 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                      {testimonial.customer_name}
-                    </h4>
-                    <div className="flex items-center space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
+    <div className="space-y-4">
+      {limitedTestimonials.map((testimonial: Testimonial) => (
+        <Card key={testimonial.id} className="overflow-hidden">
+          <CardContent className="p-4">
+            <div className="flex items-start space-x-3">
+              <OptimizedAvatar
+                src={testimonial.avatar_url}
+                alt={testimonial.customer_name}
+                fallback={testimonial.customer_name.charAt(0).toUpperCase()}
+              />
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="font-semibold text-sm">
+                    {testimonial.customer_name}
+                  </span>
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                    ))}
                   </div>
-                  
-                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-3`}>
-                    {testimonial.content}
-                  </p>
-                  
-                  {testimonial.video_url && (
-                    <div className="relative">
-                      {playingVideo === testimonial.id ? (
-                        <div className="relative">
-                          <video
-                            controls
-                            className="w-full rounded-lg"
-                            onEnded={stopVideo}
-                            autoPlay
-                          >
-                            <source src={testimonial.video_url} type="video/webm" />
-                            Tarayıcınız video oynatmayı desteklemiyor.
-                          </video>
-                          <button
-                            onClick={stopVideo}
-                            className="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-1"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => playVideo(testimonial.video_url!, testimonial.id)}
-                          className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors"
-                        >
-                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <Play className="w-5 h-5 text-blue-600 ml-1" />
-                          </div>
-                          <span className="text-sm font-medium">Video yorumunu izle</span>
-                        </button>
-                      )}
-                    </div>
-                  )}
-                  
-                  <p className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} mt-2`}>
+                </div>
+                
+                <p className="text-sm text-gray-600 mb-3">
+                  {testimonial.content}
+                </p>
+
+                {testimonial.video_url && showVideos && (
+                  <div className="relative">
+                    <button
+                      onClick={() => handleVideoPlay(testimonial.id)}
+                      className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 text-sm"
+                    >
+                      <Play className="w-4 h-4" />
+                      <span>Video yorumunu izle</span>
+                    </button>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between mt-3">
+                  <Badge variant="secondary" className="text-xs">
                     {new Date(testimonial.created_at).toLocaleDateString('tr-TR')}
-                  </p>
+                  </Badge>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      
-      {showLogo && (
-        <div className="mt-4 text-center">
-          <Badge variant="outline" className="text-xs">
-            <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded"></div>
-              <span>Güven Damgası ile güçlendirilmiştir</span>
             </div>
-          </Badge>
-        </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      {playingVideo && (
+        <Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded">Video yükleniyor...</div>
+        </div>}>
+          <VideoPlayer
+            videoUrl={limitedTestimonials.find((t: Testimonial) => t.id === playingVideo)?.video_url || ''}
+            onClose={handleVideoClose}
+          />
+        </Suspense>
       )}
     </div>
-  )
-}
-
-// X icon component
-function X(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
   )
 } 

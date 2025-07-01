@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { OptimizedAvatar } from '@/components/ui/avatar'
 import { Video, Check, X } from 'lucide-react'
 import { Testimonial } from '@/types/database'
 
@@ -26,11 +26,11 @@ export function TestimonialCard({
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-3 mb-3">
-              <Avatar>
-                <AvatarFallback>
-                  {testimonial.customer_name.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <OptimizedAvatar
+                src={testimonial.avatar_url}
+                alt={testimonial.customer_name}
+                fallback={testimonial.customer_name.charAt(0).toUpperCase()}
+              />
               <div>
                 <p className="font-semibold">{testimonial.customer_name}</p>
                 <p className="text-sm text-gray-500">

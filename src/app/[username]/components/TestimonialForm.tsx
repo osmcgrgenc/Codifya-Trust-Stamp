@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -30,6 +30,7 @@ export function TestimonialForm({ userProfile, onSuccess }: TestimonialFormProps
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showVideoRecorder, setShowVideoRecorder] = useState(false)
 
   const validateForm = () => {
     try {
@@ -87,9 +88,35 @@ export function TestimonialForm({ userProfile, onSuccess }: TestimonialFormProps
     }
   }
 
-  const handleVideoUpload = (videoUrl: string) => {
-    setForm(prev => ({ ...prev, video_url: videoUrl }))
-  }
+  const handleVideoRecorded = useCallback(async (blob: Blob) => {
+    try {
+      setLoading(true)
+      const fileName = `testimonial-${Date.now()}.webm`
+      const { error } = await supabase.storage
+        .from('testimonial-videos')
+        .upload(fileName, blob)
+
+      if (error) {
+        throw error
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('testimonial-videos')
+        .getPublicUrl(fileName)
+
+      setForm(prev => ({ ...prev, video_url: publicUrl }))
+      setShowVideoRecorder(false)
+    } catch (error) {
+      console.error('Video upload error:', error)
+      setError('Video yüklenirken hata oluştu')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const handleVideoCancel = useCallback(() => {
+    setShowVideoRecorder(false)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -134,7 +161,32 @@ export function TestimonialForm({ userProfile, onSuccess }: TestimonialFormProps
               />
             </div>
 
-            <VideoRecorder onVideoUpload={handleVideoUpload} />
+            {!showVideoRecorder ? (
+              <div className="space-y-2">
+                <Label>Video Yorumu (İsteğe bağlı)</Label>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setShowVideoRecorder(true)}
+                  className="w-full"
+                >
+                  Video Yorumu Ekle
+                </Button>
+              </div>
+            ) : (
+              <VideoRecorder 
+                onVideoRecorded={handleVideoRecorded} 
+                onCancel={handleVideoCancel} 
+              />
+            )}
+
+            {form.video_url && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-green-700 text-sm">
+                  ✓ Video yorumu eklendi
+                </p>
+              </div>
+            )}
 
             {error && (
               <div className="text-red-500 text-sm bg-red-50 p-3 rounded-md">
