@@ -120,6 +120,50 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Demo Section */}
+      <section id="demo" className="container mx-auto px-4 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Nasıl Çalışır?
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Üç basit adımda müşteri yorumlarınızı toplamaya başlayın
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-white font-bold text-xl">1</span>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Hesap Oluşturun</h3>
+            <p className="text-gray-600">
+              Ücretsiz hesabınızı oluşturun ve benzersiz kullanıcı adınızı seçin
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-white font-bold text-xl">2</span>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Link Paylaşın</h3>
+            <p className="text-gray-600">
+              Müşterilerinize özel linkinizi gönderin ve yorumları toplamaya başlayın
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-white font-bold text-xl">3</span>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Widget Ekleyin</h3>
+            <p className="text-gray-600">
+              Web sitenize widget ekleyin ve yorumları güzel bir şekilde sergileyin
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
