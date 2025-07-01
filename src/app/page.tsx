@@ -32,9 +32,7 @@ export default function HomePage() {
             <div className='w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center'>
               <span className='text-white font-bold text-sm'>GD</span>
             </div>
-            <span className='text-xl font-bold text-gray-900'>
-              Trustora
-            </span>
+            <span className='text-xl font-bold text-gray-900'>Trustora</span>
           </div>
           <nav
             className='hidden md:flex space-x-8'
