@@ -97,7 +97,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   // External packages for server components
-  serverExternalPackages: ['@upstash/redis'],
+  serverExternalPackages: ['ioredis'],
 
   // Redirects for better SEO
   async redirects() {

@@ -337,9 +337,9 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## 📞 İletişim
 
-- Website: [guvendamgasi.com](https://guvendamgasi.com)
-- Email: info@guvendamgasi.com
-- Twitter: [@guvendamgasi](https://twitter.com/guvendamgasi)
+- Website: [trustora.com](https://trustora.com)
+- Email: <info@trustora.com>
+- Twitter: [@trustora](https://twitter.com/trustora)
 
 ## 🚀 Son Güncellemeler
 
