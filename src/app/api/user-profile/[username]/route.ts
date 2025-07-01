@@ -11,9 +11,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ username: string }> }
 ) {
+  let resolvedParams: { username: string } | null = null
+
   try {
     // Resolve params promise
-    const resolvedParams = await params
+    resolvedParams = await params
 
     // Rate limiting
     const rateLimitResult = await rateLimit(
@@ -44,14 +46,28 @@ export async function GET(
       )
     }
 
-    // Kullanıcı profilini getir
+    // Kullanıcı profilini getir (sadece public alanlar)
     const { data: userProfile, error } = await supabase
       .from('user_profiles')
-      .select('*')
+      .select(
+        'username, display_name, bio, website_url, avatar_url, created_at'
+      )
       .eq('username', validatedUsername.data)
       .single()
 
-    if (error || !userProfile) {
+    if (error) {
+      // Supabase error logging
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Supabase query error:', error)
+      }
+
+      return NextResponse.json(
+        { error: 'Kullanıcı bulunamadı' },
+        { status: 404 }
+      )
+    }
+
+    if (!userProfile) {
       return NextResponse.json(
         { error: 'Kullanıcı bulunamadı' },
         { status: 404 }
@@ -73,7 +89,15 @@ export async function GET(
 
     return response
   } catch (error) {
-    console.error('API hatası:', error)
+    // Güvenli logging
+    if (process.env.NODE_ENV === 'development') {
+      console.error('API hatası:', error)
+    } else {
+      console.error('User profile API error', {
+        username: resolvedParams?.username,
+      })
+    }
+
     return NextResponse.json(
       { error: 'Sunucu hatası' },
       {

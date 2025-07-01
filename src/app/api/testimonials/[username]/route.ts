@@ -11,9 +11,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ username: string }> }
 ) {
+  let resolvedParams: { username: string } | null = null
+
   try {
     // Resolve params promise
-    const resolvedParams = await params
+    resolvedParams = await params
 
     // Rate limiting
     const rateLimitResult = await rateLimit(
@@ -51,23 +53,39 @@ export async function GET(
       .eq('username', validatedUsername.data)
       .single()
 
-    if (profileError || !userProfile) {
+    if (profileError) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('User profile fetch error:', profileError)
+      }
       return NextResponse.json(
         { error: 'Kullanıcı bulunamadı' },
         { status: 404 }
       )
     }
 
-    // Onaylanmış yorumları getir
+    if (!userProfile) {
+      return NextResponse.json(
+        { error: 'Kullanıcı bulunamadı' },
+        { status: 404 }
+      )
+    }
+
+    // Onaylanmış yorumları getir (sadece public alanlar)
     const { data: testimonials, error } = await supabase
       .from('testimonials')
-      .select('*')
+      .select('id, customer_name, content, video_url, created_at')
       .eq('user_id', userProfile.user_id)
       .eq('is_approved', true)
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Yorumlar getirilirken hata:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Yorumlar getirilirken hata:', error)
+      } else {
+        console.error('Testimonials fetch failed', {
+          userId: userProfile.user_id,
+        })
+      }
       return NextResponse.json(
         { error: 'Yorumlar yüklenemedi' },
         { status: 500 }
@@ -75,7 +93,14 @@ export async function GET(
     }
 
     // Performance headers
-    const response = NextResponse.json({ testimonials: testimonials || [] })
+    const response = NextResponse.json({
+      testimonials: testimonials || [],
+      meta: {
+        count: testimonials?.length || 0,
+        username: validatedUsername.data,
+        cached: false,
+      },
+    })
 
     // Cache headers for better performance
     response.headers.set(
@@ -89,7 +114,12 @@ export async function GET(
 
     return response
   } catch (error) {
-    console.error('API hatası:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('API hatası:', error)
+    } else {
+      console.error('Testimonials API error occurred')
+    }
+
     return NextResponse.json(
       { error: 'Sunucu hatası' },
       {

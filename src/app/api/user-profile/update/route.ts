@@ -1,6 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { rateLimit, apiLimiter } from '@/lib/rate-limit'
+import { usernameSchema, sanitizeHtml } from '@/lib/validation'
+import { z } from 'zod'
+
+// Profile update validation schema
+const profileUpdateSchema = z.object({
+  fullName: z
+    .string()
+    .min(2, 'Ad soyad en az 2 karakter olmalıdır')
+    .max(50, 'Ad soyad en fazla 50 karakter olabilir')
+    .transform(val => sanitizeHtml(val.trim())),
+  username: usernameSchema,
+  bio: z
+    .string()
+    .max(500, 'Bio en fazla 500 karakter olabilir')
+    .optional()
+    .transform(val => (val ? sanitizeHtml(val.trim()) : null)),
+  website: z
+    .string()
+    .url('Geçerli bir URL giriniz')
+    .optional()
+    .or(z.literal(''))
+    .transform(val => (val && val !== '' ? val : null)),
+})
 
 export async function PUT(request: NextRequest) {
   try {
@@ -19,28 +42,26 @@ export async function PUT(request: NextRequest) {
       return new NextResponse('Kimlik doğrulama gerekli', { status: 401 })
     }
 
-    // Request body'yi al
+    // Request body'yi al ve validate et
     const body = await request.json()
-    const { fullName, username, bio, website } = body
 
-    // Validation
-    if (!fullName || !username) {
-      return new NextResponse('Ad soyad ve kullanıcı adı gerekli', {
-        status: 400,
-      })
+    const validationResult = profileUpdateSchema.safeParse(body)
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(err => ({
+        field: err.path.join('.'),
+        message: err.message,
+      }))
+
+      return NextResponse.json(
+        {
+          error: 'Validation hatası',
+          details: errors,
+        },
+        { status: 400 }
+      )
     }
 
-    if (username.length < 3 || username.length > 20) {
-      return new NextResponse('Kullanıcı adı 3-20 karakter arasında olmalı', {
-        status: 400,
-      })
-    }
-
-    if (fullName.length < 2 || fullName.length > 50) {
-      return new NextResponse('Ad soyad 2-50 karakter arasında olmalı', {
-        status: 400,
-      })
-    }
+    const { fullName, username, bio, website } = validationResult.data
 
     // Username benzersizlik kontrolü (kendi username'i hariç)
     const { data: existingUser, error: checkError } = await supabase
@@ -51,16 +72,22 @@ export async function PUT(request: NextRequest) {
       .single()
 
     if (checkError && checkError.code !== 'PGRST116') {
-      console.error('Username check error:', checkError)
-      return new NextResponse('Kullanıcı adı kontrolü başarısız', {
-        status: 500,
-      })
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Username check error:', checkError)
+      } else {
+        console.error('Username check failed', { userId: user.id })
+      }
+      return NextResponse.json(
+        { error: 'Kullanıcı adı kontrolü başarısız' },
+        { status: 500 }
+      )
     }
 
     if (existingUser) {
-      return new NextResponse('Bu kullanıcı adı zaten kullanılıyor', {
-        status: 409,
-      })
+      return NextResponse.json(
+        { error: 'Bu kullanıcı adı zaten kullanılıyor' },
+        { status: 409 }
+      )
     }
 
     // Profil güncelleme
@@ -78,8 +105,15 @@ export async function PUT(request: NextRequest) {
       .single()
 
     if (updateError) {
-      console.error('Profile update error:', updateError)
-      return new NextResponse('Profil güncellenemedi', { status: 500 })
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Profile update error:', updateError)
+      } else {
+        console.error('Profile update failed', { userId: user.id })
+      }
+      return NextResponse.json(
+        { error: 'Profil güncellenemedi' },
+        { status: 500 }
+      )
     }
 
     // User metadata güncelleme
@@ -93,7 +127,9 @@ export async function PUT(request: NextRequest) {
     })
 
     if (metadataError) {
-      console.error('Metadata update error:', metadataError)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Metadata update error:', metadataError)
+      }
       // Metadata hatası kritik değil, profil güncellendi
     }
 
@@ -103,7 +139,11 @@ export async function PUT(request: NextRequest) {
       profile: updatedProfile,
     })
   } catch (error) {
-    console.error('Profile update API error:', error)
-    return new NextResponse('Sunucu hatası', { status: 500 })
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Profile update API error:', error)
+    } else {
+      console.error('Profile update API error occurred')
+    }
+    return NextResponse.json({ error: 'Sunucu hatası' }, { status: 500 })
   }
 }
