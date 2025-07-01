@@ -1,15 +1,19 @@
 'use client'
 
 import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
 
 export function RegisterHeader() {
   return (
     <CardHeader className='text-center'>
-      <div className='flex items-center justify-center space-x-2 mb-4'>
-        <div className='w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center'>
-          <span className='text-white font-bold text-sm'>GD</span>
-        </div>
-        <span className='text-xl font-bold text-gray-900'>Trustora</span>
+      <div className='flex items-center justify-center space-x-2 mb-4 h-10'>
+        <Image
+          src='/logo.png'
+          alt='Trustora'
+          width={150}
+          height={28}
+          className='crop-center-sm'
+        />
       </div>
       <CardTitle className='text-2xl'>Hesap Oluştur</CardTitle>
       <CardDescription>

@@ -302,11 +302,14 @@ export default function HomePage() {
         <div className='container mx-auto px-4'>
           <div className='grid md:grid-cols-4 gap-8'>
             <div>
-              <div className='flex items-center space-x-2 mb-4'>
-                <div className='w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center'>
-                  <span className='text-white font-bold text-sm'>GD</span>
-                </div>
-                <span className='text-xl font-bold'>Trustora</span>
+              <div className='flex items-center space-x-2 mb-4 h-10'>
+                <Image
+                  src='/logo.png'
+                  alt='Trustora'
+                  width={150}
+                  height={28}
+                  className='crop-center-sm'
+                />
               </div>
               <p className='text-gray-400'>
                 Müşteri yorumlarınızı güce dönüştürün.
@@ -401,7 +404,9 @@ export default function HomePage() {
             </div>
           </div>
           <div className='border-t border-gray-800 mt-8 pt-8 text-center text-gray-400'>
-            <p>&copy; 2024 Trustora. Tüm hakları saklıdır.</p>
+            <p>
+              &copy; {new Date().getFullYear()} Trustora. Tüm hakları saklıdır.
+            </p>
           </div>
         </div>
       </footer>
