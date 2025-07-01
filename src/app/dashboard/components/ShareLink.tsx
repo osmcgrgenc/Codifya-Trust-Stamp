@@ -40,7 +40,7 @@ export function ShareLink({ username }: ShareLinkProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Güven Damgası - Müşteri Yorumları',
+          title: 'Trustora - Müşteri Yorumları',
           text: 'Müşteri yorumlarımı görüntülemek için bu linke tıklayın:',
           url: profileLink,
         })

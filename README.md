@@ -1,10 +1,10 @@
-# Güven Damgası (Trust Stamp)
+# Trustora (Trust Stamp)
 
 Freelancer'lar ve küçük e-ticaret siteleri için müşteri yorumlarını (testimonial) video veya metin olarak toplamayı, yönetmeyi ve web sitelerinde şık bir şekilde sergilemeyi otomatikleştiren modern bir SaaS platformu.
 
 ## 🎯 Proje Hakkında
 
-Güven Damgası, işletmelerin müşteri yorumlarını etkili bir şekilde toplamasını ve sergilemesini sağlayan kapsamlı bir çözümdür. Video yorumları, modern widget'lar ve güçlü yönetim araçları ile sosyal kanıtınızı güçlendirin.
+Trustora, işletmelerin müşteri yorumlarını etkili bir şekilde toplamasını ve sergilemesini sağlayan kapsamlı bir çözümdür. Video yorumları, modern widget'lar ve güçlü yönetim araçları ile sosyal kanıtınızı güçlendirin.
 
 ## 🚀 Özellikler
 

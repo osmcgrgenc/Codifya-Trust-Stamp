@@ -136,7 +136,7 @@ export function TestimonialForm({
               <span className='text-white font-bold text-sm'>GD</span>
             </div>
             <span className='text-xl font-bold text-gray-900'>
-              Güven Damgası
+              Trustora
             </span>
           </div>
           <CardTitle className='text-2xl'>

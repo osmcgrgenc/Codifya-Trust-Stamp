@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description:
     'Müşteri yorumlarınızı güce dönüştürün. Video ve metin yorumları ile sosyal kanıtınızı güçlendirin.',
   openGraph: {
-    title: 'Güven Damgası - Müşteri Yorumları Toplama Platformu',
+    title: 'Trustora - Müşteri Yorumları Toplama Platformu',
     description:
       'Müşteri yorumlarınızı güce dönüştürün. Video ve metin yorumları ile sosyal kanıtınızı güçlendirin.',
   },
@@ -33,7 +33,7 @@ export default function HomePage() {
               <span className='text-white font-bold text-sm'>GD</span>
             </div>
             <span className='text-xl font-bold text-gray-900'>
-              Güven Damgası
+              Trustora
             </span>
           </div>
           <nav
@@ -110,7 +110,7 @@ export default function HomePage() {
       <section id='features' className='container mx-auto px-4 py-20'>
         <div className='text-center mb-16'>
           <h2 className='text-4xl font-bold text-gray-900 mb-4'>
-            Neden Güven Damgası?
+            Neden Trustora?
           </h2>
           <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
             Sosyal kanıt, online satışlarınızı artırmanın en etkili yoludur. Biz
@@ -304,7 +304,7 @@ export default function HomePage() {
                 <div className='w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center'>
                   <span className='text-white font-bold text-sm'>GD</span>
                 </div>
-                <span className='text-xl font-bold'>Güven Damgası</span>
+                <span className='text-xl font-bold'>Trustora</span>
               </div>
               <p className='text-gray-400'>
                 Müşteri yorumlarınızı güce dönüştürün.
@@ -399,7 +399,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className='border-t border-gray-800 mt-8 pt-8 text-center text-gray-400'>
-            <p>&copy; 2024 Güven Damgası. Tüm hakları saklıdır.</p>
+            <p>&copy; 2024 Trustora. Tüm hakları saklıdır.</p>
           </div>
         </div>
       </footer>

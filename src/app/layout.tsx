@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Güven Damgası - Müşteri Yorumları Toplama Platformu',
-    template: '%s | Güven Damgası',
+    default: 'Trustora - Müşteri Yorumları Toplama Platformu',
+    template: '%s | Trustora',
   },
   description:
     "Freelancer'lar ve e-ticaret siteleri için müşteri yorumlarını toplamayı, yönetmeyi ve web sitelerinde şık bir şekilde sergilemeyi otomatikleştiren araç. Video yorumları, metin yorumları ve modern widget'lar ile sosyal kanıtınızı güçlendirin.",
@@ -31,13 +31,13 @@ export const metadata: Metadata = {
     'freelancer',
     'widget',
     'testimonial',
-    'güven damgası',
+    'Trustora',
     'müşteri deneyimi',
     'online satış',
   ],
-  authors: [{ name: 'Güven Damgası' }],
-  creator: 'Güven Damgası',
-  publisher: 'Güven Damgası',
+  authors: [{ name: 'Trustora' }],
+  creator: 'Trustora',
+  publisher: 'Trustora',
   formatDetection: {
     email: false,
     address: false,
@@ -51,22 +51,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'tr_TR',
     url: 'https://guvendamgasi.com',
-    title: 'Güven Damgası - Müşteri Yorumları Toplama Platformu',
+    title: 'Trustora - Müşteri Yorumları Toplama Platformu',
     description:
       'Müşteri yorumlarınızı güce dönüştürün. Video ve metin yorumları ile sosyal kanıtınızı güçlendirin.',
-    siteName: 'Güven Damgası',
+    siteName: 'Trustora',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Güven Damgası - Müşteri Yorumları Platformu',
+        alt: 'Trustora - Müşteri Yorumları Platformu',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Güven Damgası - Müşteri Yorumları Toplama Platformu',
+    title: 'Trustora - Müşteri Yorumları Toplama Platformu',
     description:
       'Müşteri yorumlarınızı güce dönüştürün. Video ve metin yorumları ile sosyal kanıtınızı güçlendirin.',
     images: ['/og-image.jpg'],
