@@ -1,44 +1,79 @@
-import { Duration, Ratelimit } from '@upstash/ratelimit'
-import { Redis } from '@upstash/redis'
+import Redis from 'ioredis'
 import { serverEnv } from './env'
 
 // Redis client (optional - falls back to memory if not configured)
-const redis =
-  serverEnv.UPSTASH_REDIS_REST_URL && serverEnv.UPSTASH_REDIS_REST_TOKEN
-    ? new Redis({
-        url: serverEnv.UPSTASH_REDIS_REST_URL!,
-        token: serverEnv.UPSTASH_REDIS_REST_TOKEN!,
-      })
-    : undefined
+const redis = serverEnv.REDIS_URL ? new Redis(serverEnv.REDIS_URL) : undefined
+
+// Memory fallback için basit sayaç
+const memoryCounters = new Map<string, { count: number; reset: number }>()
 
 // Helper function to create rate limiters with fallback
-const createRateLimiter = (prefix: string, limit: number, window: string) => {
-  if (!redis) {
-    console.warn('Redis not configured, using memory-based rate limiting')
-    return new Ratelimit({
-      redis: null as unknown as Redis, // Force memory mode
-      limiter: Ratelimit.slidingWindow(limit, window as Duration),
-      analytics: true,
-      prefix,
-    })
-  }
+type RateLimiterConfig = {
+  prefix: string
+  limit: number
+  window: number // ms cinsinden
+}
 
-  return new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(limit, window as Duration),
-    analytics: true,
-    prefix,
-  })
+function createRateLimiter({ prefix, limit, window }: RateLimiterConfig) {
+  return {
+    async limit(id: string) {
+      const key = `${prefix}:${id}`
+      const now = Date.now()
+      let remaining = limit
+      let reset = now + window
+      let count = 0
+      let success = true
+
+      if (redis) {
+        // Redis ile atomic increment ve expire
+        count = await redis.incr(key)
+        if (count === 1) {
+          await redis.pexpire(key, window)
+        }
+        remaining = Math.max(0, limit - count)
+        reset = now + (await redis.pttl(key))
+        success = count <= limit
+      } else {
+        // Memory fallback
+        let entry = memoryCounters.get(key)
+        if (!entry || entry.reset < now) {
+          entry = { count: 1, reset: now + window }
+        } else {
+          entry.count++
+        }
+        memoryCounters.set(key, entry)
+        count = entry.count
+        remaining = Math.max(0, limit - count)
+        reset = entry.reset
+        success = count <= limit
+      }
+
+      return {
+        success,
+        limit,
+        reset,
+        remaining,
+      }
+    },
+  }
 }
 
 // Rate limiters
-export const apiLimiter = createRateLimiter('api_limiter', 10, '1 m')
-export const authLimiter = createRateLimiter('auth_limiter', 5, '5 m')
-export const testimonialLimiter = createRateLimiter(
-  'testimonial_limiter',
-  3,
-  '1 h'
-)
+export const apiLimiter = createRateLimiter({
+  prefix: 'api_limiter',
+  limit: 10,
+  window: 60_000,
+})
+export const authLimiter = createRateLimiter({
+  prefix: 'auth_limiter',
+  limit: 5,
+  window: 5 * 60_000,
+})
+export const testimonialLimiter = createRateLimiter({
+  prefix: 'testimonial_limiter',
+  limit: 3,
+  window: 60 * 60_000,
+})
 
 // IP cache for performance with proper cleanup
 interface CacheEntry {
@@ -97,7 +132,14 @@ export interface RateLimitResult {
 // Rate limit middleware for API routes
 export async function rateLimit(
   request: Request,
-  limiter: Ratelimit,
+  limiter: {
+    limit: (id: string) => Promise<{
+      success: boolean
+      limit: number
+      reset: number
+      remaining: number
+    }>
+  },
   identifier?: string | number
 ): Promise<RateLimitResult> {
   try {

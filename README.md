@@ -58,7 +58,7 @@ Trustora, işletmelerin müşteri yorumlarını etkili bir şekilde toplamasın�
 ### 🚀 Performans & Güvenlik
 
 - **Caching**: SWR + Next.js Cache
-- **Rate Limiting**: Upstash Redis
+- **Rate Limiting**: ioredis (Redis)
 - **Validation**: Zod
 - **Security**: CSP, Bot Protection, Input Sanitization
 - **SEO**: Next.js Metadata API
@@ -154,9 +154,8 @@ CREATE POLICY "Anyone can insert testimonials" ON testimonials
    - Public access'i etkinleştirin
 
 6. Upstash Redis kurulumu (Rate Limiting için):
-   - [Upstash](https://upstash.com/) hesabı oluşturun
-   - Redis database oluşturun
-   - REST URL ve Token'ı .env.local'e ekleyin
+   - Bir Redis sunucusu (örn. [Redis Cloud](https://redis.com/), [Upstash](https://upstash.com/), kendi Redis sunucunuz) oluşturun
+   - Bağlantı URL'sini .env.local dosyasına REDIS_URL olarak ekleyin
 
 7. Geliştirme sunucusunu başlatın:
 
@@ -177,8 +176,7 @@ Tüm gerekli environment değişkenleri `.env.example` dosyasında tanımlanmı�
 
 ### Opsiyonel Değişkenler
 
-- `UPSTASH_REDIS_REST_URL`: Upstash Redis REST URL'i (rate limiting için)
-- `UPSTASH_REDIS_REST_TOKEN`: Upstash Redis token'ı
+- `REDIS_URL`: Redis bağlantı URL'i (rate limiting için, örn: redis://user:pass@host:port)
 
 ## 🎯 Kullanım
 
@@ -369,7 +367,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 - [Stripe](https://stripe.com/) - Ödeme işlemleri
 - [Tailwind CSS](https://tailwindcss.com/) - CSS framework
 - [shadcn/ui](https://ui.shadcn.com/) - UI bileşenleri
-- [Upstash](https://upstash.com/) - Redis as a Service
+- [ioredis](https://github.com/luin/ioredis) - Redis istemcisi
 - [Zod](https://zod.dev/) - TypeScript-first schema validation
 - [SWR](https://swr.vercel.app/) - React Hooks for data fetching
 - [Lucide](https://lucide.dev/) - Beautiful & consistent icon toolkit

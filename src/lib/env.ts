@@ -15,8 +15,7 @@ const serverEnvSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
-  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
-  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+  REDIS_URL: z.string().url().optional(),
 })
 
 // Parse client environment variables
@@ -54,8 +53,7 @@ const parseServerEnv = () => {
     return {
       STRIPE_SECRET_KEY: '',
       NODE_ENV: 'development' as const,
-      UPSTASH_REDIS_REST_URL: undefined,
-      UPSTASH_REDIS_REST_TOKEN: undefined,
+      REDIS_URL: undefined,
     }
   }
 
