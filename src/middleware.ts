@@ -63,13 +63,14 @@ export async function middleware(request: NextRequest) {
 
   // Content Security Policy - Enhanced for Next.js compatibility
   if (!isDevelopment) {
+    const serverUrlEnv = process.env.NEXT_PUBLIC_SERVER_URL
     const cspDirectives = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://*.supabase.co",
+      `script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://*.supabase.co ${serverUrlEnv}`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: https: blob: https://*.supabase.co",
+      `img-src 'self' data: https: blob: https://*.supabase.co ${serverUrlEnv}`,
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://*.supabase.co https://api.stripe.com https://*.supabase.com",
+      `connect-src 'self' https://*.supabase.co https://api.stripe.com https://*.supabase.com ${serverUrlEnv}`,
       'frame-src https://js.stripe.com',
       "media-src 'self' blob: https:",
       "object-src 'none'",
