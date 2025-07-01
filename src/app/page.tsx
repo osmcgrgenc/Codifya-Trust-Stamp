@@ -3,12 +3,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Star, Video, MessageSquare, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Ana Sayfa",
+  description: "Müşteri yorumlarınızı güce dönüştürün. Video ve metin yorumları ile sosyal kanıtınızı güçlendirin.",
+  openGraph: {
+    title: "Güven Damgası - Müşteri Yorumları Toplama Platformu",
+    description: "Müşteri yorumlarınızı güce dönüştürün. Video ve metin yorumları ile sosyal kanıtınızı güçlendirin.",
+  },
+}
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
@@ -16,10 +26,10 @@ export default function HomePage() {
             </div>
             <span className="text-xl font-bold text-gray-900">Güven Damgası</span>
           </div>
-          <nav className="hidden md:flex space-x-8">
-            <Link href="#features" className="text-gray-600 hover:text-gray-900">Özellikler</Link>
-            <Link href="#pricing" className="text-gray-600 hover:text-gray-900">Fiyatlandırma</Link>
-            <Link href="#contact" className="text-gray-600 hover:text-gray-900">İletişim</Link>
+          <nav className="hidden md:flex space-x-8" role="navigation" aria-label="Ana navigasyon">
+            <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">Özellikler</Link>
+            <Link href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">Fiyatlandırma</Link>
+            <Link href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">İletişim</Link>
           </nav>
           <div className="flex space-x-4">
             <Button variant="ghost" asChild>
@@ -73,7 +83,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <Card className="text-center p-6">
+          <Card className="text-center p-6 hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="w-6 h-6 text-blue-600" />
@@ -88,7 +98,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className="text-center p-6">
+          <Card className="text-center p-6 hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Video className="w-6 h-6 text-green-600" />
@@ -103,7 +113,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className="text-center p-6">
+          <Card className="text-center p-6 hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Star className="w-6 h-6 text-purple-600" />
@@ -176,7 +186,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <Card className="p-8">
+          <Card className="p-8 hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl">Başlangıç Paketi</CardTitle>
               <div className="text-4xl font-bold text-gray-900">
@@ -211,7 +221,7 @@ export default function HomePage() {
             </div>
           </Card>
 
-          <Card className="p-8 border-2 border-blue-500 relative">
+          <Card className="p-8 border-2 border-blue-500 relative hover:shadow-lg transition-shadow duration-300">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
               <Badge className="bg-blue-500 text-white">Popüler</Badge>
             </div>
@@ -252,7 +262,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-12" id="contact">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -269,25 +279,25 @@ export default function HomePage() {
             <div>
               <h3 className="font-semibold mb-4">Ürün</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="#features" className="hover:text-white">Özellikler</Link></li>
-                <li><Link href="#pricing" className="hover:text-white">Fiyatlandırma</Link></li>
-                <li><Link href="/demo" className="hover:text-white">Demo</Link></li>
+                <li><Link href="#features" className="hover:text-white transition-colors duration-200">Özellikler</Link></li>
+                <li><Link href="#pricing" className="hover:text-white transition-colors duration-200">Fiyatlandırma</Link></li>
+                <li><Link href="#demo" className="hover:text-white transition-colors duration-200">Demo</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Destek</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/help" className="hover:text-white">Yardım</Link></li>
-                <li><Link href="/contact" className="hover:text-white">İletişim</Link></li>
-                <li><Link href="/docs" className="hover:text-white">Dokümantasyon</Link></li>
+                <li><Link href="/help" className="hover:text-white transition-colors duration-200">Yardım</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors duration-200">İletişim</Link></li>
+                <li><Link href="/docs" className="hover:text-white transition-colors duration-200">Dokümantasyon</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Şirket</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about" className="hover:text-white">Hakkımızda</Link></li>
-                <li><Link href="/privacy" className="hover:text-white">Gizlilik</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Kullanım Şartları</Link></li>
+                <li><Link href="/about" className="hover:text-white transition-colors duration-200">Hakkımızda</Link></li>
+                <li><Link href="/privacy" className="hover:text-white transition-colors duration-200">Gizlilik</Link></li>
+                <li><Link href="/terms" className="hover:text-white transition-colors duration-200">Kullanım Şartları</Link></li>
               </ul>
             </div>
           </div>
