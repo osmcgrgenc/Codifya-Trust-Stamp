@@ -1,8 +1,5 @@
-import Redis from 'ioredis'
-import { serverEnv } from './env'
-
-// Redis client (optional - falls back to memory if not configured)
-const redis = serverEnv.REDIS_URL ? new Redis(serverEnv.REDIS_URL) : undefined
+// Edge Runtime uyumlu rate limiting (Redis yok, sadece memory)
+// Bu dosya middleware için kullanılır
 
 // Memory fallback için basit sayaç
 const memoryCounters = new Map<string, { count: number; reset: number }>()
@@ -24,29 +21,18 @@ function createRateLimiter({ prefix, limit, window }: RateLimiterConfig) {
       let count = 0
       let success = true
 
-      if (redis) {
-        // Redis ile atomic increment ve expire
-        count = await redis.incr(key)
-        if (count === 1) {
-          await redis.pexpire(key, window)
-        }
-        remaining = Math.max(0, limit - count)
-        reset = now + (await redis.pttl(key))
-        success = count <= limit
+      // Memory fallback (Edge Runtime uyumlu)
+      let entry = memoryCounters.get(key)
+      if (!entry || entry.reset < now) {
+        entry = { count: 1, reset: now + window }
       } else {
-        // Memory fallback
-        let entry = memoryCounters.get(key)
-        if (!entry || entry.reset < now) {
-          entry = { count: 1, reset: now + window }
-        } else {
-          entry.count++
-        }
-        memoryCounters.set(key, entry)
-        count = entry.count
-        remaining = Math.max(0, limit - count)
-        reset = entry.reset
-        success = count <= limit
+        entry.count++
       }
+      memoryCounters.set(key, entry)
+      count = entry.count
+      remaining = Math.max(0, limit - count)
+      reset = entry.reset
+      success = count <= limit
 
       return {
         success,
@@ -176,32 +162,5 @@ export async function rateLimit(
       remaining: 0,
       message: 'Rate limiting disabled due to error',
     }
-  }
-}
-
-// Utility function to get rate limit headers
-export function getRateLimitHeaders(
-  result: RateLimitResult
-): Record<string, string> {
-  return {
-    'X-RateLimit-Limit': result.limit.toString(),
-    'X-RateLimit-Remaining': result.remaining.toString(),
-    'X-RateLimit-Reset': result.reset.toString(),
-  }
-}
-
-// Cleanup function for testing and memory management
-export function clearIPCache(): void {
-  for (const entry of ipCache.values()) {
-    clearTimeout(entry.timeoutId)
-  }
-  ipCache.clear()
-}
-
-// Get cache statistics for monitoring
-export function getCacheStats(): { size: number; keys: string[] } {
-  return {
-    size: ipCache.size,
-    keys: Array.from(ipCache.keys()),
   }
 }
